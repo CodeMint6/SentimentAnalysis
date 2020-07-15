@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link href="/stylesheets/main.css" rel="stylesheet" />
+  <link rel="icon" href="/images/favicon.png" type="image/x-icon">
+    
+  <title><%= title %></title>
+  <script>
+    window.onload = function () {
+      var d = [];
+
+      var chart = new CanvasJS.Chart("chartContainer", {
+        animationEnabled: true,
+        theme: "light2",
+        title: {
+          text: "Emotion data"
+        },
+        axisY: {
+          title: "Units",
+          titleFontSize: 24
+        },
+        data: [{
+          type: "column",
+          dataPoints: d
+        }]
+      });
+
+      function addData(data) {
+        for (var i = 0; i < data.length; i++) {
+          d.push({
+            y: data[i].units,
+            label: data[i].beh
+          });
+        }
+        chart.render();
+      }
+
+      $.getJSON("./data.json", addData);
+    };
+  </script>
+</head>
+
+<body>
+  <div class="s130">
+    <form action="/" method="POST">
+      <div class="inner-form">
+        <div class="input-field first-wrap">
+          <div class="svg-wrapper">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z">
+              </path>
+            </svg>
+          </div>
+          <input id="search" type="text" name="query" placeholder="What are you looking for?" required />
+        </div>
+        <div class="input-field second-wrap">
+          <button class="btn-search" type="submit">SEARCH</button>
+        </div>
+      </div>
+      <% if (emot==="Negative") { %> <span class="emoji"><img src="images/icons8-sad-80.png" /></span><% } %> 
+      <% if (emot==="Positive") { %> <span class="emoji"><img src="images/icons8-happy-80.png" /></span> <% } %>
+       <% if (emot==="Neutral") { %><span class="emoji"><img src="images/icons8-neutral-80.png" /></span><% } %>
+    </form>
+    
+    
+    <% if (emot==="Negative"||emot==="Positive"||emot==="Neutral") { %><%- include chart.ejs %>
+     <% } else { %>
+      <h1 style="height: 370px; width: 60%; margin-left: -40%; margin-top: 29%;"><%=emot%> </h1>
+      
+      <% } %>
+</div>
+  <script src="/javascripts/jquery-1.11.1.min.js"></script>
+  <script src="/javascripts/canvasjs.min.js"></script>
+</body>
+<!-- This templates was made by Colorlib (https://colorlib.com) -->
+
+</html>
